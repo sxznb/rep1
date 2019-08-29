@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+        
+    <bean id="user" class="aop.UserImpl"/>
+    <bean id="advice" class="aop.Advice"/>
+    <aop:config>
+        <aop:pointcut id="add" expression="execution(* *.addUser(..))"/>
+        <aop:pointcut id="delete" expression="execution(* *.deleteUser(..))"/>
+        <aop:pointcut id="update" expression="execution(* *.updateUser(..))"/>
+        <aop:pointcut id="query" expression="execution(* *.queryUser(..))"/>
+        <aop:pointcut id="batch" expression="execution(* *.batchDeleteUser(..))"/>
+        <aop:aspect ref="advice">
+            <aop:before method="before" pointcut-ref="add"/>
+            <aop:after-returning method="afterReturning" pointcut-ref="delete"/>
+            <aop:after-throwing method="throwable" pointcut-ref="update"/>
+            <aop:around method="around" pointcut-ref="query"/>
+            <aop:after method="after" pointcut-ref="batch"/>
+
+        </aop:aspect>
+    </aop:config>
+    
+</beans>
